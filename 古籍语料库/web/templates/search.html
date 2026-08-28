@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>检索结果 · 《易经》法汉双语古籍语料库</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+
+            font-family:
+                "Microsoft YaHei",
+                "Noto Sans SC",
+                Arial,
+                sans-serif;
+
+            background: #f7f5f0;
+            color: #333;
+        }
+
+
+        /* ==================================================
+           顶部
+        ================================================== */
+
+        header {
+            background: #202a36;
+
+            color: white;
+
+            padding: 32px 20px 35px;
+
+            text-align: center;
+        }
+
+        header h1 {
+
+            margin: 0 0 10px;
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 32px;
+
+            font-weight: 500;
+
+            letter-spacing: 3px;
+        }
+
+        header p {
+
+            margin: 0;
+
+            color: #d8dde3;
+
+            font-size: 14px;
+
+            letter-spacing: 1px;
+        }
+
+
+        /* ==================================================
+           返回首页
+        ================================================== */
+
+        .top-nav {
+
+            max-width: 1100px;
+
+            margin: 0 auto;
+
+            padding: 18px 20px 0;
+        }
+
+        .back-home {
+
+            display: inline-block;
+
+            color: #8b1e24;
+
+            text-decoration: none;
+
+            font-size: 14px;
+        }
+
+        .back-home:hover {
+
+            text-decoration: underline;
+        }
+
+
+        /* ==================================================
+           主体
+        ================================================== */
+
+        main {
+
+            max-width: 1100px;
+
+            margin: auto;
+
+            padding:
+                30px 20px 60px;
+        }
+
+
+        /* ==================================================
+           搜索框
+        ================================================== */
+
+        .search-area {
+
+            margin-bottom: 35px;
+        }
+
+        .search-box {
+
+            background: white;
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+            box-shadow:
+                0 8px 25px rgba(0, 0, 0, 0.07);
+
+            display: flex;
+        }
+
+        .search-box input {
+
+            flex: 1;
+
+            border: none;
+
+            outline: none;
+
+            padding: 14px 18px;
+
+            font-size: 16px;
+
+            color: #333;
+        }
+
+        .search-box button {
+
+            border: none;
+
+            background: #8b1e24;
+
+            color: white;
+
+            padding: 0 28px;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+
+            cursor: pointer;
+        }
+
+        .search-box button:hover {
+
+            background: #70171c;
+        }
+
+
+        /* ==================================================
+           搜索信息
+        ================================================== */
+
+        .search-info {
+
+            margin-bottom: 25px;
+
+            padding-bottom: 15px;
+
+            border-bottom:
+                1px solid #e4e0d8;
+        }
+
+        .search-info h2 {
+
+            margin: 0 0 8px;
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 24px;
+
+            font-weight: 500;
+
+            color: #333;
+        }
+
+        .search-info p {
+
+            margin: 0;
+
+            color: #888;
+
+            font-size: 14px;
+        }
+
+
+        /* ==================================================
+           关键词高亮
+        ================================================== */
+
+        mark {
+
+            background: #f3df9d;
+
+            color: #7b171d;
+
+            padding:
+                1px 3px;
+
+            border-radius: 3px;
+        }
+
+
+        /* ==================================================
+           搜索结果卡片
+        ================================================== */
+
+        .result-card {
+
+            background: white;
+
+            border:
+                1px solid #e4e0d8;
+
+            border-radius: 8px;
+
+            padding: 25px 28px;
+
+            margin-bottom: 18px;
+
+            transition:
+                box-shadow 0.2s,
+                transform 0.2s,
+                border-color 0.2s;
+        }
+
+        .result-card:hover {
+
+            transform: translateY(-2px);
+
+            border-color: #cfc8bd;
+
+            box-shadow:
+                0 8px 22px rgba(0, 0, 0, 0.07);
+        }
+
+
+        /* ==================================================
+           结果顶部
+        ================================================== */
+
+        .result-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom: 18px;
+        }
+
+        .result-meta {
+
+            display: flex;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+
+            gap: 9px;
+        }
+
+        .hexagram-number {
+
+            color: #999;
+
+            font-size: 13px;
+        }
+
+        .hexagram-name {
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 21px;
+
+            color: #8b1e24;
+
+            font-weight: 500;
+        }
+
+
+        /* ==================================================
+           类型标签
+        ================================================== */
+
+        .type-badge {
+
+            display: inline-block;
+
+            padding:
+                4px 10px;
+
+            border-radius: 4px;
+
+            font-size: 12px;
+        }
+
+        .type-gua {
+
+            background: #eef1f4;
+
+            color: #44515d;
+        }
+
+        .type-yao {
+
+            background: #f5eee3;
+
+            color: #765d3d;
+        }
+
+        .type-special {
+
+            background: #f3e1e2;
+
+            color: #8b1e24;
+        }
+
+
+        /* ==================================================
+           爻位
+        ================================================== */
+
+        .position {
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            color: #555;
+
+            font-size: 14px;
+
+            margin-left: 5px;
+        }
+
+
+        /* ==================================================
+           文本区域
+        ================================================== */
+
+        .text-block {
+
+            margin-bottom: 18px;
+        }
+
+        .text-label {
+
+            font-size: 12px;
+
+            color: #999;
+
+            margin-bottom: 7px;
+
+            letter-spacing: 1px;
+        }
+
+        .chinese {
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 18px;
+
+            line-height: 1.9;
+
+            color: #333;
+        }
+
+        .french {
+
+            font-family:
+                Georgia,
+                "Times New Roman",
+                serif;
+
+            font-size: 15px;
+
+            line-height: 1.8;
+
+            color: #666;
+        }
+
+
+        /* ==================================================
+           查看此卦
+        ================================================== */
+
+        .result-footer {
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            padding-top: 15px;
+
+            border-top:
+                1px solid #eeeae3;
+        }
+
+        .view-hexagram {
+
+            color: #8b1e24;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            transition: color 0.2s;
+        }
+
+        .view-hexagram:hover {
+
+            color: #70171c;
+
+            text-decoration: underline;
+        }
+
+
+        /* ==================================================
+           无结果
+        ================================================== */
+
+        .no-results {
+
+            background: white;
+
+            border:
+                1px solid #e4e0d8;
+
+            border-radius: 8px;
+
+            padding: 55px 30px;
+
+            text-align: center;
+
+            color: #888;
+        }
+
+        .no-results h3 {
+
+            margin:
+                0 0 12px;
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 22px;
+
+            font-weight: 500;
+
+            color: #555;
+        }
+
+        .no-results p {
+
+            margin: 0;
+
+            font-size: 14px;
+
+            line-height: 1.8;
+        }
+
+
+        /* ==================================================
+           页脚
+        ================================================== */
+
+        footer {
+
+            text-align: center;
+
+            padding: 30px 20px;
+
+            color: #999;
+
+            font-size: 13px;
+
+            border-top:
+                1px solid #e5e1d9;
+        }
+
+
+        /* ==================================================
+           响应式
+        ================================================== */
+
+        @media (max-width: 650px) {
+
+            header h1 {
+
+                font-size: 27px;
+            }
+
+            .search-box {
+
+                flex-direction: column;
+
+                gap: 8px;
+            }
+
+            .search-box button {
+
+                padding: 13px;
+            }
+
+            .result-card {
+
+                padding:
+                    20px;
+            }
+
+            .result-header {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+            .result-footer {
+
+                justify-content: flex-start;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ======================================================
+     顶部
+====================================================== -->
+
+<header>
+
+    <h1>《易经》法汉双语古籍语料库</h1>
+
+    <p>
+        Yijing — Corpus bilingue chinois-français
+    </p>
+
+</header>
+
+
+<!-- ======================================================
+     返回首页
+====================================================== -->
+
+<div class="top-nav">
+
+    <a
+        href="/"
+        class="back-home"
+    >
+        ← 返回首页
+    </a>
+
+</div>
+
+
+<!-- ======================================================
+     主体
+====================================================== -->
+
+<main>
+
+
+    <!-- 搜索框 -->
+
+    <div class="search-area">
+
+        <form
+            class="search-box"
+            action="/search"
+            method="get"
+        >
+
+            <input
+                type="text"
+                name="q"
+                value="{{ keyword }}"
+                placeholder="请输入中文或法语关键词，例如：龙、乾、dragon……"
+            >
+
+            <button type="submit">
+                检索
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- ==================================================
+         搜索结果信息
+    ================================================== -->
+
+    {% if keyword %}
+
+    <div class="search-info">
+
+        <h2>
+            “{{ keyword }}” 的检索结果
+        </h2>
+
+        <p>
+            共找到 {{ results|length }} 条相关语料
+        </p>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- ==================================================
+         搜索结果
+    ================================================== -->
+
+    {% if results %}
+
+
+        {% for result in results %}
+
+        <div class="result-card">
+
+
+            <!-- 结果顶部 -->
+
+            <div class="result-header">
+
+                <div class="result-meta">
+
+                    <span class="hexagram-number">
+                        第 {{ result["hexagram_no"] }} 卦
+                    </span>
+
+                    <span class="hexagram-name">
+                        {{ result["hexagram"] }}
+                    </span>
+
+
+                    {% if result["type"] == "卦辞" %}
+
+                        <span class="type-badge type-gua">
+                            卦辞
+                        </span>
+
+                    {% elif result["type"] == "特殊爻辞" %}
+
+                        <span class="type-badge type-special">
+                            特殊爻辞
+                        </span>
+
+                    {% else %}
+
+                        <span class="type-badge type-yao">
+                            爻辞
+                        </span>
+
+                    {% endif %}
+
+
+                    {% if result["position"] %}
+
+                        <span class="position">
+                            {{ result["position"] }}
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 中文
+            ================================================== -->
+
+            <div class="text-block">
+
+                <div class="text-label">
+                    中文原文
+                </div>
+
+                <div class="chinese">
+
+                    {{ result["chinese"] | safe }}
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 法文
+            ================================================== -->
+
+            <div class="text-block">
+
+                <div class="text-label">
+                    Français
+                </div>
+
+                <div class="french">
+
+                    {{ result["french"] | safe }}
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 查看此卦
+            ================================================== -->
+
+            <div class="result-footer">
+
+                <a
+                    href="/hexagram/{{ result['hexagram_no'] }}"
+                    class="view-hexagram"
+                >
+                    查看此卦 →
+                </a>
+
+            </div>
+
+
+        </div>
+
+        {% endfor %}
+
+
+    {% elif keyword %}
+
+
+        <!-- ==================================================
+             没有结果
+        ================================================== -->
+
+        <div class="no-results">
+
+            <h3>
+                没有找到相关语料
+            </h3>
+
+            <p>
+                暂未找到与“{{ keyword }}”相关的中文或法语文本。
+                <br>
+                可以尝试其他关键词，例如“龙”“乾”或“dragon”。
+            </p>
+
+        </div>
+
+
+    {% endif %}
+
+
+</main>
+
+
+<!-- ======================================================
+     页脚
+====================================================== -->
+
+<footer>
+
+    《易经》法汉双语古籍语料库 · Nankai University
+
+</footer>
+
+
+</body>
+
+</html>

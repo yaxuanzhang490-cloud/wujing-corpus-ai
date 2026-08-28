@@ -1,0 +1,3772 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>《易经》法汉双语古籍语料库</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                "Microsoft YaHei",
+                "Noto Sans SC",
+                Arial,
+                sans-serif;
+
+            background: #f7f5f0;
+
+            color: #333;
+        }
+
+
+        /* =========================
+           顶部
+        ========================= */
+
+        header {
+
+            background: #202a36;
+
+            color: white;
+
+            padding:
+                42px
+                20px
+                48px;
+
+            text-align: center;
+        }
+
+
+        header h1 {
+
+            margin:
+                0
+                0
+                12px;
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 36px;
+
+            font-weight: 500;
+
+            letter-spacing: 4px;
+        }
+
+
+        header p {
+
+            margin: 0;
+
+            color: #d8dde3;
+
+            font-size: 15px;
+
+            letter-spacing: 1px;
+        }
+
+
+        /* =========================
+           搜索区域
+        ========================= */
+
+        .search-area {
+
+            max-width: 900px;
+
+            margin:
+                -28px
+                auto
+                42px;
+
+            padding:
+                0
+                20px;
+        }
+
+
+        .search-box {
+
+            background: white;
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+            box-shadow:
+                0
+                8px
+                25px
+                rgba(0, 0, 0, 0.08);
+
+            display: flex;
+        }
+
+
+        .search-box input {
+
+            flex: 1;
+
+            border: none;
+
+            outline: none;
+
+            padding:
+                15px
+                18px;
+
+            font-size: 16px;
+
+            color: #333;
+        }
+
+
+        .search-box button {
+
+            border: none;
+
+            background: #8b1e24;
+
+            color: white;
+
+            padding:
+                0
+                28px;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+
+            cursor: pointer;
+
+            transition:
+                background 0.2s;
+        }
+
+
+        .search-box button:hover {
+
+            background: #70171c;
+        }
+
+
+        /* =========================
+           主体
+        ========================= */
+
+        main {
+
+            max-width: 1100px;
+
+            margin: auto;
+
+            padding:
+                0
+                20px
+                60px;
+        }
+
+
+                /* =========================
+           语料库概览
+        ========================= */
+
+        .statistics {
+
+            margin-bottom: 50px;
+        }
+
+
+        .statistics-title {
+
+            text-align: center;
+
+            margin-bottom: 22px;
+        }
+
+
+        .statistics-title h2 {
+
+            margin:
+                0
+                0
+                8px;
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 24px;
+
+            font-weight: 500;
+        }
+
+
+        .statistics-title p {
+
+            margin: 0;
+
+            color: #888;
+
+            font-size: 14px;
+        }
+
+
+        .statistics-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 14px;
+        }
+
+
+        .stat-card {
+
+            background: white;
+
+            border:
+                1px solid #e4e0d8;
+
+            border-radius: 8px;
+
+            padding:
+                22px
+                12px;
+
+            text-align: center;
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s,
+                border-color 0.2s;
+        }
+
+
+        .stat-card:hover {
+
+            transform: translateY(-3px);
+
+            border-color: #c9b7ad;
+
+            box-shadow:
+                0
+                8px
+                20px
+                rgba(0, 0, 0, 0.07);
+        }
+
+
+        .stat-number {
+
+            font-family:
+                Georgia,
+                "Times New Roman",
+                serif;
+
+            font-size: 30px;
+
+            color: #8b1e24;
+
+            line-height: 1;
+
+            margin-bottom: 10px;
+        }
+
+
+        .stat-label {
+
+            color: #666;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           六十四卦标题
+        ========================= */
+
+        .section-title {
+
+            text-align: center;
+
+            margin-bottom: 20px;
+        }
+
+
+        .section-title h2 {
+
+            margin:
+                0
+                0
+                8px;
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 25px;
+
+            font-weight: 500;
+        }
+
+
+        .section-title p {
+
+            margin: 0;
+
+            color: #888;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           经部切换
+        ========================= */
+
+        .filter-bar {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 8px;
+
+            margin:
+                0
+                0
+                25px;
+        }
+
+
+        .filter-button {
+
+            border:
+                1px solid #ddd6cc;
+
+            background: white;
+
+            color: #777;
+
+            padding:
+                8px
+                18px;
+
+            border-radius: 5px;
+
+            font-size: 13px;
+
+            cursor: pointer;
+
+            transition:
+                background 0.2s,
+                color 0.2s,
+                border-color 0.2s;
+        }
+
+
+        .filter-button:hover {
+
+            border-color: #bca69c;
+
+            color: #8b1e24;
+        }
+
+
+        .filter-button.active {
+
+            background: #8b1e24;
+
+            border-color: #8b1e24;
+
+            color: white;
+        }
+
+
+        /* =========================
+           卦卡片网格
+        ========================= */
+
+        .hexagram-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 16px;
+        }
+
+
+        /* =========================
+           单张卦卡片
+        ========================= */
+
+        .hexagram-card {
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-height: 205px;
+
+            padding:
+                20px
+                15px;
+
+            background: white;
+
+            border:
+                1px solid #e4e0d8;
+
+            border-radius: 8px;
+
+            text-decoration: none;
+
+            color: #333;
+
+            position: relative;
+
+            overflow: hidden;
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s,
+                border-color 0.2s;
+        }
+
+
+        .hexagram-card:hover {
+
+            transform:
+                translateY(-4px);
+
+            border-color:
+                #c9b7ad;
+
+            box-shadow:
+                0
+                9px
+                22px
+                rgba(0, 0, 0, 0.08);
+        }
+
+
+        /* =========================
+           卦序
+        ========================= */
+
+        .number {
+
+            color: #999;
+
+            font-size: 12px;
+
+            margin-bottom: 5px;
+
+            letter-spacing: 1px;
+        }
+
+
+        /* =========================
+           卦名
+        ========================= */
+
+        .name {
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 24px;
+
+            color: #8b1e24;
+
+            margin-bottom: 5px;
+
+            letter-spacing: 2px;
+        }
+
+
+        /* =========================
+           卦象
+        ========================= */
+
+        .gua-symbol {
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 48px;
+
+            line-height: 1;
+
+            color: #202a36;
+
+            margin:
+                7px
+                0
+                10px;
+
+            height: 50px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+
+        /* =========================
+           上下卦
+        ========================= */
+
+        .gua-info {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #888;
+
+            font-size: 12px;
+        }
+
+
+        .gua-info span {
+
+            white-space: nowrap;
+        }
+
+
+        .gua-divider {
+
+            color: #c7c0b7;
+        }
+
+
+        /* =========================
+           上经 / 下经分组
+        ========================= */
+
+        .section-label {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            margin:
+                35px
+                0
+                18px;
+
+            color: #555;
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 18px;
+        }
+
+
+        .section-label::before,
+        .section-label::after {
+
+            content: "";
+
+            flex: 1;
+
+            height: 1px;
+
+            background: #e1dbd2;
+        }
+
+
+        .section-label:first-child {
+
+            margin-top: 0;
+        }
+
+
+        /* =========================
+           网站说明
+        ========================= */
+
+        .intro {
+
+            margin-top: 55px;
+
+            padding: 30px;
+
+            background: white;
+
+            border-left:
+                4px solid #8b1e24;
+
+            border-radius: 5px;
+
+            box-shadow:
+                0
+                4px
+                15px
+                rgba(0, 0, 0, 0.03);
+        }
+
+
+        .intro h3 {
+
+            margin-top: 0;
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 20px;
+
+            font-weight: 500;
+        }
+
+
+        .intro p {
+
+            line-height: 1.9;
+
+            color: #666;
+
+            font-size: 14px;
+
+            margin-bottom: 0;
+        }
+
+
+        /* =========================
+           页脚
+        ========================= */
+
+        footer {
+
+            text-align: center;
+
+            padding:
+                30px
+                20px;
+
+            color: #999;
+
+            font-size: 13px;
+
+            border-top:
+                1px solid #e5e1d9;
+        }
+
+
+        /* =========================
+           响应式
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .hexagram-grid {
+
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            header h1 {
+
+                font-size: 28px;
+
+                letter-spacing: 3px;
+            }
+
+
+            .hexagram-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+                gap: 12px;
+            }
+
+
+            .hexagram-card {
+
+                min-height: 185px;
+            }
+
+
+            .search-box {
+
+                flex-direction: column;
+
+                gap: 8px;
+            }
+
+
+            .search-box button {
+
+                padding: 13px;
+            }
+
+
+            .filter-bar {
+
+                flex-wrap: wrap;
+            }
+
+
+            .filter-button {
+
+                padding:
+                    7px
+                    14px;
+            }
+
+        }
+
+
+        @media (max-width: 400px) {
+
+            .hexagram-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+
+            .hexagram-card {
+
+                min-height: 175px;
+
+                padding:
+                    15px
+                    8px;
+            }
+
+
+            .name {
+
+                font-size: 21px;
+            }
+
+
+            .gua-symbol {
+
+                font-size: 42px;
+            }
+
+
+            .gua-info {
+
+                font-size: 11px;
+
+                gap: 5px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     顶部
+========================= -->
+
+<header>
+
+    <h1>
+        《易经》法汉双语古籍语料库
+    </h1>
+
+    <p>
+        Yijing — Corpus bilingue chinois-français
+    </p>
+
+</header>
+
+
+<!-- =========================
+     搜索
+========================= -->
+
+<div class="search-area">
+
+    <form
+        class="search-box"
+        action="/search"
+        method="get"
+    >
+
+        <input
+            type="text"
+            name="q"
+            placeholder="请输入中文或法语关键词，例如：龙、乾、dragon……"
+        >
+
+        <button type="submit">
+            检索
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- =========================
+     主体
+========================= -->
+
+<main>
+
+    <!-- =========================
+     语料库概览
+========================= -->
+
+<div class="statistics">
+
+    <div class="statistics-title">
+
+        <h2>
+            语料库概览
+        </h2>
+
+        <p>
+            Corpus Overview
+        </p>
+
+    </div>
+
+
+    <div class="statistics-grid">
+
+
+        <!-- 64 卦 -->
+
+        <div class="stat-card">
+
+            <div class="stat-number">
+                64
+            </div>
+
+            <div class="stat-label">
+                卦
+            </div>
+
+        </div>
+
+
+        <!-- 451 总语料 -->
+
+        <div class="stat-card">
+
+            <div class="stat-number">
+                451
+            </div>
+
+            <div class="stat-label">
+                总语料
+            </div>
+
+        </div>
+
+
+        <!-- 65 卦辞 -->
+
+        <div class="stat-card">
+
+            <div class="stat-number">
+                65
+            </div>
+
+            <div class="stat-label">
+                卦辞
+            </div>
+
+        </div>
+
+
+        <!-- 384 普通爻辞 -->
+
+        <div class="stat-card">
+
+            <div class="stat-number">
+                384
+            </div>
+
+            <div class="stat-label">
+                普通爻辞
+            </div>
+
+        </div>
+
+
+        <!-- 2 特殊爻辞 -->
+
+        <div class="stat-card">
+
+            <div class="stat-number">
+                2
+            </div>
+
+            <div class="stat-label">
+                特殊爻辞
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+    <div class="section-title">
+
+        <h2>
+            六十四卦
+        </h2>
+
+        <p>
+            点击卦名查看该卦完整的中法双语语料
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         浏览筛选
+    ========================= -->
+
+    <div class="filter-bar">
+
+        <button
+            class="filter-button active"
+            data-filter="all"
+            type="button"
+        >
+            全部六十四卦
+        </button>
+
+        <button
+            class="filter-button"
+            data-filter="upper"
+            type="button"
+        >
+            上经 · 1—30
+        </button>
+
+        <button
+            class="filter-button"
+            data-filter="lower"
+            type="button"
+        >
+            下经 · 31—64
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         六十四卦
+    ========================= -->
+
+    <div class="hexagram-grid">
+
+
+        <!-- =====================
+             1 乾
+        ====================== -->
+
+        <a
+            href="/hexagram/1"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 1 卦
+            </div>
+
+            <div class="name">
+                乾
+            </div>
+
+            <div class="gua-symbol">
+                ☰
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：乾
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：乾
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             2 坤
+        ====================== -->
+
+        <a
+            href="/hexagram/2"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 2 卦
+            </div>
+
+            <div class="name">
+                坤
+            </div>
+
+            <div class="gua-symbol">
+                ☷
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：坤
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：坤
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             3 屯
+        ====================== -->
+
+        <a
+            href="/hexagram/3"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 3 卦
+            </div>
+
+            <div class="name">
+                屯
+            </div>
+
+            <div class="gua-symbol">
+                ☵
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：坎
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：震
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             4 蒙
+        ====================== -->
+
+        <a
+            href="/hexagram/4"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 4 卦
+            </div>
+
+            <div class="name">
+                蒙
+            </div>
+
+            <div class="gua-symbol">
+                ☶
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：艮
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：坎
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             5 需
+        ====================== -->
+
+        <a
+            href="/hexagram/5"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 5 卦
+            </div>
+
+            <div class="name">
+                需
+            </div>
+
+            <div class="gua-symbol">
+                ☵
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：坎
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：乾
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             6 讼
+        ====================== -->
+
+        <a
+            href="/hexagram/6"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 6 卦
+            </div>
+
+            <div class="name">
+                讼
+            </div>
+
+            <div class="gua-symbol">
+                ☵
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：乾
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：坎
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             7 师
+        ====================== -->
+
+        <a
+            href="/hexagram/7"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 7 卦
+            </div>
+
+            <div class="name">
+                师
+            </div>
+
+            <div class="gua-symbol">
+                ☷
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：坤
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：坎
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             8 比
+        ====================== -->
+
+        <a
+            href="/hexagram/8"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 8 卦
+            </div>
+
+            <div class="name">
+                比
+            </div>
+
+            <div class="gua-symbol">
+                ☵
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：坎
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：坤
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             9 小畜
+        ====================== -->
+
+        <a
+            href="/hexagram/9"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 9 卦
+            </div>
+
+            <div class="name">
+                小畜
+            </div>
+
+            <div class="gua-symbol">
+                ☴
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：巽
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：乾
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             10 履
+        ====================== -->
+
+        <a
+            href="/hexagram/10"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 10 卦
+            </div>
+
+            <div class="name">
+                履
+            </div>
+
+            <div class="gua-symbol">
+                ☰
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：乾
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：兑
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             11 泰
+        ====================== -->
+
+        <a
+            href="/hexagram/11"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 11 卦
+            </div>
+
+            <div class="name">
+                泰
+            </div>
+
+            <div class="gua-symbol">
+                ☷
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：坤
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：乾
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             12 否
+        ====================== -->
+
+        <a
+            href="/hexagram/12"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 12 卦
+            </div>
+
+            <div class="name">
+                否
+            </div>
+
+            <div class="gua-symbol">
+                ☰
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：乾
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：坤
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             13 同人
+        ====================== -->
+
+        <a
+            href="/hexagram/13"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 13 卦
+            </div>
+
+            <div class="name">
+                同人
+            </div>
+
+            <div class="gua-symbol">
+                ☲
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：乾
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：离
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             14 大有
+        ====================== -->
+
+        <a
+            href="/hexagram/14"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 14 卦
+            </div>
+
+            <div class="name">
+                大有
+            </div>
+
+            <div class="gua-symbol">
+                ☲
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：离
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：乾
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             15 谦
+        ====================== -->
+
+        <a
+            href="/hexagram/15"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 15 卦
+            </div>
+
+            <div class="name">
+                谦
+            </div>
+
+            <div class="gua-symbol">
+                ☷
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：坤
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：艮
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             16 豫
+        ====================== -->
+
+        <a
+            href="/hexagram/16"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 16 卦
+            </div>
+
+            <div class="name">
+                豫
+            </div>
+
+            <div class="gua-symbol">
+                ☷
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：震
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：坤
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             17 随
+        ====================== -->
+
+        <a
+            href="/hexagram/17"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 17 卦
+            </div>
+
+            <div class="name">
+                随
+            </div>
+
+            <div class="gua-symbol">
+                ☱
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：兑
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：震
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             18 蛊
+        ====================== -->
+
+        <a
+            href="/hexagram/18"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 18 卦
+            </div>
+
+            <div class="name">
+                蛊
+            </div>
+
+            <div class="gua-symbol">
+                ☶
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：艮
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：巽
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             19 临
+        ====================== -->
+
+        <a
+            href="/hexagram/19"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 19 卦
+            </div>
+
+            <div class="name">
+                临
+            </div>
+
+            <div class="gua-symbol">
+                ☷
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：坤
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：兑
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             20 观
+        ====================== -->
+
+        <a
+            href="/hexagram/20"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 20 卦
+            </div>
+
+            <div class="name">
+                观
+            </div>
+
+            <div class="gua-symbol">
+                ☷
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：巽
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：坤
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             21 噬嗑
+        ====================== -->
+
+        <a
+            href="/hexagram/21"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 21 卦
+            </div>
+
+            <div class="name">
+                噬嗑
+            </div>
+
+            <div class="gua-symbol">
+                ☲
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：离
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：震
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             22 贲
+        ====================== -->
+
+        <a
+            href="/hexagram/22"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 22 卦
+            </div>
+
+            <div class="name">
+                贲
+            </div>
+
+            <div class="gua-symbol">
+                ☶
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：艮
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：离
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             23 剥
+        ====================== -->
+
+        <a
+            href="/hexagram/23"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 23 卦
+            </div>
+
+            <div class="name">
+                剥
+            </div>
+
+            <div class="gua-symbol">
+                ☶
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：艮
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：坤
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             24 复
+        ====================== -->
+
+        <a
+            href="/hexagram/24"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 24 卦
+            </div>
+
+            <div class="name">
+                复
+            </div>
+
+            <div class="gua-symbol">
+                ☷
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：坤
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：震
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             25 无妄
+        ====================== -->
+
+        <a
+            href="/hexagram/25"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 25 卦
+            </div>
+
+            <div class="name">
+                无妄
+            </div>
+
+            <div class="gua-symbol">
+                ☰
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：乾
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：震
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             26 大畜
+        ====================== -->
+
+        <a
+            href="/hexagram/26"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 26 卦
+            </div>
+
+            <div class="name">
+                大畜
+            </div>
+
+            <div class="gua-symbol">
+                ☶
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：艮
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：乾
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             27 颐
+        ====================== -->
+
+        <a
+            href="/hexagram/27"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 27 卦
+            </div>
+
+            <div class="name">
+                颐
+            </div>
+
+            <div class="gua-symbol">
+                ☶
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：艮
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：震
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             28 大过
+        ====================== -->
+
+        <a
+            href="/hexagram/28"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 28 卦
+            </div>
+
+            <div class="name">
+                大过
+            </div>
+
+            <div class="gua-symbol">
+                ☱
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：兑
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：巽
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             29 坎
+        ====================== -->
+
+        <a
+            href="/hexagram/29"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 29 卦
+            </div>
+
+            <div class="name">
+                坎
+            </div>
+
+            <div class="gua-symbol">
+                ☵
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：坎
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：坎
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             30 离
+        ====================== -->
+
+        <a
+            href="/hexagram/30"
+            class="hexagram-card"
+            data-section="upper"
+        >
+
+            <div class="number">
+                第 30 卦
+            </div>
+
+            <div class="name">
+                离
+            </div>
+
+            <div class="gua-symbol">
+                ☲
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：离
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：离
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             31 咸
+        ====================== -->
+
+        <a
+            href="/hexagram/31"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 31 卦
+            </div>
+
+            <div class="name">
+                咸
+            </div>
+
+            <div class="gua-symbol">
+                ☱
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：兑
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：艮
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             32 恒
+        ====================== -->
+
+        <a
+            href="/hexagram/32"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 32 卦
+            </div>
+
+            <div class="name">
+                恒
+            </div>
+
+            <div class="gua-symbol">
+                ☳
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：震
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：巽
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             33 遁
+        ====================== -->
+
+        <a
+            href="/hexagram/33"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 33 卦
+            </div>
+
+            <div class="name">
+                遁
+            </div>
+
+            <div class="gua-symbol">
+                ☰
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：乾
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：艮
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             34 大壮
+        ====================== -->
+
+        <a
+            href="/hexagram/34"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 34 卦
+            </div>
+
+            <div class="name">
+                大壮
+            </div>
+
+            <div class="gua-symbol">
+                ☳
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：震
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：乾
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             35 晋
+        ====================== -->
+
+        <a
+            href="/hexagram/35"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 35 卦
+            </div>
+
+            <div class="name">
+                晋
+            </div>
+
+            <div class="gua-symbol">
+                ☲
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：离
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：坤
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             36 明夷
+        ====================== -->
+
+        <a
+            href="/hexagram/36"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 36 卦
+            </div>
+
+            <div class="name">
+                明夷
+            </div>
+
+            <div class="gua-symbol">
+                ☷
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：坤
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：离
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             37 家人
+        ====================== -->
+
+        <a
+            href="/hexagram/37"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 37 卦
+            </div>
+
+            <div class="name">
+                家人
+            </div>
+
+            <div class="gua-symbol">
+                ☴
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：巽
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：离
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             38 睽
+        ====================== -->
+
+        <a
+            href="/hexagram/38"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 38 卦
+            </div>
+
+            <div class="name">
+                睽
+            </div>
+
+            <div class="gua-symbol">
+                ☲
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：离
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：兑
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             39 蹇
+        ====================== -->
+
+        <a
+            href="/hexagram/39"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 39 卦
+            </div>
+
+            <div class="name">
+                蹇
+            </div>
+
+            <div class="gua-symbol">
+                ☵
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：坎
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：艮
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             40 解
+        ====================== -->
+
+        <a
+            href="/hexagram/40"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 40 卦
+            </div>
+
+            <div class="name">
+                解
+            </div>
+
+            <div class="gua-symbol">
+                ☳
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：震
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：坎
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             41 损
+        ====================== -->
+
+        <a
+            href="/hexagram/41"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 41 卦
+            </div>
+
+            <div class="name">
+                损
+            </div>
+
+            <div class="gua-symbol">
+                ☶
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：艮
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：兑
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             42 益
+        ====================== -->
+
+        <a
+            href="/hexagram/42"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 42 卦
+            </div>
+
+            <div class="name">
+                益
+            </div>
+
+            <div class="gua-symbol">
+                ☴
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：巽
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：震
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             43 夬
+        ====================== -->
+
+        <a
+            href="/hexagram/43"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 43 卦
+            </div>
+
+            <div class="name">
+                夬
+            </div>
+
+            <div class="gua-symbol">
+                ☱
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：兑
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：乾
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             44 姤
+        ====================== -->
+
+        <a
+            href="/hexagram/44"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 44 卦
+            </div>
+
+            <div class="name">
+                姤
+            </div>
+
+            <div class="gua-symbol">
+                ☰
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：乾
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：巽
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             45 萃
+        ====================== -->
+
+        <a
+            href="/hexagram/45"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 45 卦
+            </div>
+
+            <div class="name">
+                萃
+            </div>
+
+            <div class="gua-symbol">
+                ☱
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：兑
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：坤
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             46 升
+        ====================== -->
+
+        <a
+            href="/hexagram/46"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 46 卦
+            </div>
+
+            <div class="name">
+                升
+            </div>
+
+            <div class="gua-symbol">
+                ☷
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：坤
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：巽
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             47 困
+        ====================== -->
+
+        <a
+            href="/hexagram/47"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 47 卦
+            </div>
+
+            <div class="name">
+                困
+            </div>
+
+            <div class="gua-symbol">
+                ☱
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：兑
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：坎
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             48 井
+        ====================== -->
+
+        <a
+            href="/hexagram/48"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 48 卦
+            </div>
+
+            <div class="name">
+                井
+            </div>
+
+            <div class="gua-symbol">
+                ☵
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：坎
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：巽
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             49 革
+        ====================== -->
+
+        <a
+            href="/hexagram/49"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 49 卦
+            </div>
+
+            <div class="name">
+                革
+            </div>
+
+            <div class="gua-symbol">
+                ☱
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：兑
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：离
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             50 鼎
+        ====================== -->
+
+        <a
+            href="/hexagram/50"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 50 卦
+            </div>
+
+            <div class="name">
+                鼎
+            </div>
+
+            <div class="gua-symbol">
+                ☲
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：离
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：巽
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             51 震
+        ====================== -->
+
+        <a
+            href="/hexagram/51"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 51 卦
+            </div>
+
+            <div class="name">
+                震
+            </div>
+
+            <div class="gua-symbol">
+                ☳
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：震
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：震
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             52 艮
+        ====================== -->
+
+        <a
+            href="/hexagram/52"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 52 卦
+            </div>
+
+            <div class="name">
+                艮
+            </div>
+
+            <div class="gua-symbol">
+                ☶
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：艮
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：艮
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             53 渐
+        ====================== -->
+
+        <a
+            href="/hexagram/53"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 53 卦
+            </div>
+
+            <div class="name">
+                渐
+            </div>
+
+            <div class="gua-symbol">
+                ☴
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：巽
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：艮
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             54 归妹
+        ====================== -->
+
+        <a
+            href="/hexagram/54"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 54 卦
+            </div>
+
+            <div class="name">
+                归妹
+            </div>
+
+            <div class="gua-symbol">
+                ☳
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：震
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：兑
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             55 丰
+        ====================== -->
+
+        <a
+            href="/hexagram/55"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 55 卦
+            </div>
+
+            <div class="name">
+                丰
+            </div>
+
+            <div class="gua-symbol">
+                ☳
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：震
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：离
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             56 旅
+        ====================== -->
+
+        <a
+            href="/hexagram/56"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 56 卦
+            </div>
+
+            <div class="name">
+                旅
+            </div>
+
+            <div class="gua-symbol">
+                ☲
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：离
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：艮
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             57 巽
+        ====================== -->
+
+        <a
+            href="/hexagram/57"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 57 卦
+            </div>
+
+            <div class="name">
+                巽
+            </div>
+
+            <div class="gua-symbol">
+                ☴
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：巽
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：巽
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             58 兑
+        ====================== -->
+
+        <a
+            href="/hexagram/58"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 58 卦
+            </div>
+
+            <div class="name">
+                兑
+            </div>
+
+            <div class="gua-symbol">
+                ☱
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：兑
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：兑
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             59 涣
+        ====================== -->
+
+        <a
+            href="/hexagram/59"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 59 卦
+            </div>
+
+            <div class="name">
+                涣
+            </div>
+
+            <div class="gua-symbol">
+                ☴
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：巽
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：坎
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             60 节
+        ====================== -->
+
+        <a
+            href="/hexagram/60"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 60 卦
+            </div>
+
+            <div class="name">
+                节
+            </div>
+
+            <div class="gua-symbol">
+                ☵
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：坎
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：兑
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             61 中孚
+        ====================== -->
+
+        <a
+            href="/hexagram/61"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 61 卦
+            </div>
+
+            <div class="name">
+                中孚
+            </div>
+
+            <div class="gua-symbol">
+                ☴
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：巽
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：兑
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             62 小过
+        ====================== -->
+
+        <a
+            href="/hexagram/62"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 62 卦
+            </div>
+
+            <div class="name">
+                小过
+            </div>
+
+            <div class="gua-symbol">
+                ☳
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：震
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：艮
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             63 既济
+        ====================== -->
+
+        <a
+            href="/hexagram/63"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 63 卦
+            </div>
+
+            <div class="name">
+                既济
+            </div>
+
+            <div class="gua-symbol">
+                ☵
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：坎
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：离
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =====================
+             64 未济
+        ====================== -->
+
+        <a
+            href="/hexagram/64"
+            class="hexagram-card"
+            data-section="lower"
+        >
+
+            <div class="number">
+                第 64 卦
+            </div>
+
+            <div class="name">
+                未济
+            </div>
+
+            <div class="gua-symbol">
+                ☲
+            </div>
+
+            <div class="gua-info">
+
+                <span>
+                    上卦：离
+                </span>
+
+                <span class="gua-divider">
+                    ·
+                </span>
+
+                <span>
+                    下卦：坎
+                </span>
+
+            </div>
+
+        </a>
+
+
+    </div>
+
+
+    <!-- =========================
+         网站说明
+    ========================= -->
+
+    <div class="intro">
+
+        <h3>
+            关于本语料库
+        </h3>
+
+        <p>
+
+            本语料库以《易经》为基础，整理并构建中文原文与法语译文的双语平行语料，
+            旨在为古籍翻译研究、跨语言文本研究以及中华传统文化的数字化传播提供检索与分析工具。
+            当前数据库收录《易经》六十四卦相关语料，并支持中文、法语关键词检索以及按卦查询。
+
+        </p>
+
+    </div>
+
+
+</main>
+
+
+<!-- =========================
+     页脚
+========================= -->
+
+<footer>
+
+    《易经》法汉双语古籍语料库 · Nankai University
+
+</footer>
+
+
+<script>
+
+    /* =========================
+       六十四卦浏览筛选
+    ========================= */
+
+    const filterButtons =
+        document.querySelectorAll(".filter-button");
+
+    const hexagramCards =
+        document.querySelectorAll(".hexagram-card");
+
+
+    filterButtons.forEach(function(button) {
+
+        button.addEventListener(
+            "click",
+            function() {
+
+                const filter =
+                    button.dataset.filter;
+
+
+                /* 更新按钮状态 */
+
+                filterButtons.forEach(
+                    function(item) {
+
+                        item.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
+
+
+                button.classList.add(
+                    "active"
+                );
+
+
+                /* 筛选卦 */
+
+                hexagramCards.forEach(
+                    function(card) {
+
+                        const section =
+                            card.dataset.section;
+
+
+                        if (
+                            filter === "all" ||
+                            filter === section
+                        ) {
+
+                            card.style.display =
+                                "flex";
+
+                        } else {
+
+                            card.style.display =
+                                "none";
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+    });
+
+</script>
+
+
+</body>
+
+</html>
+

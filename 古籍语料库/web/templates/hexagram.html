@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        第 {{ number }} 卦 · 《易经》法汉双语古籍语料库
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+
+            font-family:
+                "Microsoft YaHei",
+                "Noto Sans SC",
+                Arial,
+                sans-serif;
+
+            background: #f7f5f0;
+            color: #333;
+        }
+
+
+        /* =========================
+           顶部
+        ========================= */
+
+        header {
+            background: #202a36;
+            color: white;
+
+            padding:
+                34px
+                20px
+                38px;
+
+            text-align: center;
+        }
+
+        header h1 {
+            margin:
+                0
+                0
+                10px;
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 32px;
+            font-weight: 500;
+
+            letter-spacing: 5px;
+        }
+
+        header p {
+            margin: 0;
+
+            color: #d8dde3;
+
+            font-size: 14px;
+
+            letter-spacing: 1px;
+        }
+
+
+        /* =========================
+           返回
+        ========================= */
+
+        .back-area {
+            max-width: 1100px;
+
+            margin:
+                25px
+                auto
+                0;
+
+            padding:
+                0
+                20px;
+        }
+
+        .back-link {
+            color: #8b1e24;
+
+            text-decoration: none;
+
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =========================
+           主体
+        ========================= */
+
+        main {
+            max-width: 1100px;
+
+            margin: auto;
+
+            padding:
+                20px
+                20px
+                70px;
+        }
+
+
+        /* =========================
+           卦标题
+        ========================= */
+
+        .hexagram-header {
+            background: white;
+
+            border:
+                1px solid #e4e0d8;
+
+            border-radius: 8px;
+
+            padding: 32px;
+
+            margin-bottom: 28px;
+
+            text-align: center;
+
+            box-shadow:
+                0
+                5px
+                18px
+                rgba(0, 0, 0, 0.04);
+        }
+
+        .hexagram-number {
+            color: #999;
+
+            font-size: 13px;
+
+            margin-bottom: 8px;
+        }
+
+        .hexagram-name {
+            margin: 0;
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 38px;
+
+            font-weight: 500;
+
+            color: #8b1e24;
+
+            letter-spacing: 6px;
+        }
+
+        .hexagram-subtitle {
+            margin-top: 12px;
+
+            color: #999;
+
+            font-size: 13px;
+
+            letter-spacing: 1px;
+        }
+
+
+        /* =========================
+           卦象视觉化
+        ========================= */
+
+        .hexagram-visual {
+            margin-top: 28px;
+
+            padding:
+                26px
+                20px
+                28px;
+
+            background: #faf8f3;
+
+            border:
+                1px solid #e4e0d8;
+
+            border-radius: 8px;
+        }
+
+        .hexagram-visual-title {
+            margin-bottom: 22px;
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 16px;
+
+            color: #555;
+
+            letter-spacing: 2px;
+        }
+
+        .hexagram-lines {
+            width: 250px;
+
+            margin: 0 auto;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 12px;
+        }
+
+        .yao-line {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            height: 22px;
+        }
+
+        /* 阳爻 */
+
+        .yang-line {
+            width: 210px;
+
+            height: 8px;
+
+            background: #202a36;
+
+            border-radius: 2px;
+        }
+
+        /* 阴爻 */
+
+        .yin-line {
+            width: 210px;
+
+            height: 8px;
+
+            display: flex;
+
+            justify-content: space-between;
+        }
+
+        .yin-line::before,
+        .yin-line::after {
+            content: "";
+
+            display: block;
+
+            width: 92px;
+
+            height: 8px;
+
+            background: #202a36;
+
+            border-radius: 2px;
+        }
+
+        .yao-label {
+            width: 38px;
+
+            margin-left: 12px;
+
+            color: #999;
+
+            font-size: 12px;
+
+            text-align: left;
+        }
+
+        .hexagram-symbol {
+            margin-top: 20px;
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 18px;
+
+            color: #8b1e24;
+
+            letter-spacing: 3px;
+        }
+
+        .hexagram-note {
+            margin-top: 8px;
+
+            color: #999;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           分区标题
+        ========================= */
+
+        .section-title {
+            margin:
+                35px
+                0
+                16px;
+
+            padding-left: 12px;
+
+            border-left:
+                4px solid #8b1e24;
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 21px;
+
+            font-weight: 500;
+        }
+
+
+        /* =========================
+           卦辞
+        ========================= */
+
+        .gua-ci {
+            background: white;
+
+            border:
+                1px solid #e4e0d8;
+
+            border-radius: 8px;
+
+            padding:
+                25px
+                28px;
+
+            box-shadow:
+                0
+                4px
+                15px
+                rgba(0, 0, 0, 0.03);
+        }
+
+
+        /* =========================
+           普通爻辞
+        ========================= */
+
+        .yao-list {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 14px;
+        }
+
+        .yao-card {
+            background: white;
+
+            border:
+                1px solid #e4e0d8;
+
+            border-radius: 8px;
+
+            padding:
+                22px
+                26px;
+
+            transition:
+                box-shadow 0.2s,
+                transform 0.2s,
+                border-color 0.2s;
+        }
+
+        .yao-card:hover {
+            transform: translateY(-2px);
+
+            border-color: #c9b7ad;
+
+            box-shadow:
+                0
+                7px
+                20px
+                rgba(0, 0, 0, 0.06);
+        }
+
+
+        /* =========================
+           特殊爻辞
+        ========================= */
+
+        .special-section {
+            margin-top: 35px;
+        }
+
+        .special-card {
+            background: #faf8f3;
+
+            border:
+                1px solid #d8cec2;
+
+            border-left:
+                4px solid #202a36;
+
+            border-radius: 8px;
+
+            padding:
+                22px
+                26px;
+        }
+
+        .special-label {
+            display: inline-block;
+
+            padding:
+                5px
+                11px;
+
+            margin-bottom: 13px;
+
+            background: #202a36;
+
+            color: white;
+
+            border-radius: 4px;
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           内容
+        ========================= */
+
+        .entry {
+            padding:
+                20px
+                0;
+
+            border-bottom:
+                1px solid #eeeae3;
+        }
+
+        .entry:first-child {
+            padding-top: 0;
+        }
+
+        .entry:last-child {
+            border-bottom: none;
+
+            padding-bottom: 0;
+        }
+
+        .yao-position {
+            display: inline-block;
+
+            min-width: 54px;
+
+            text-align: center;
+
+            padding:
+                5px
+                9px;
+
+            margin-bottom: 12px;
+
+            background: #8b1e24;
+
+            color: white;
+
+            border-radius: 4px;
+
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 14px;
+        }
+
+        .chinese {
+            font-family:
+                "SimSun",
+                "STSong",
+                serif;
+
+            font-size: 19px;
+
+            line-height: 1.9;
+
+            color: #333;
+
+            margin-bottom: 12px;
+        }
+
+        .french {
+            font-family:
+                Georgia,
+                "Times New Roman",
+                serif;
+
+            font-size: 16px;
+
+            line-height: 1.8;
+
+            color: #666;
+        }
+
+        .language-label {
+            display: block;
+
+            font-family:
+                "Microsoft YaHei",
+                Arial,
+                sans-serif;
+
+            font-size: 12px;
+
+            color: #999;
+
+            margin-bottom: 4px;
+
+            letter-spacing: 1px;
+        }
+
+
+        /* =========================
+           上一卦 / 下一卦
+        ========================= */
+
+        .navigation {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-top: 45px;
+
+            gap: 20px;
+        }
+
+        .nav-button {
+            display: block;
+
+            padding:
+                13px
+                22px;
+
+            background: white;
+
+            border:
+                1px solid #e4e0d8;
+
+            border-radius: 6px;
+
+            color: #555;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            transition:
+                background 0.2s,
+                color 0.2s,
+                border-color 0.2s;
+        }
+
+        .nav-button:hover {
+            background: #8b1e24;
+
+            color: white;
+
+            border-color: #8b1e24;
+        }
+
+        .nav-center {
+            color: #999;
+
+            font-size: 13px;
+
+            text-align: center;
+        }
+
+
+        /* =========================
+           页脚
+        ========================= */
+
+        footer {
+            text-align: center;
+
+            padding:
+                30px
+                20px;
+
+            color: #999;
+
+            font-size: 13px;
+
+            border-top:
+                1px solid #e5e1d9;
+        }
+
+
+        /* =========================
+           响应式
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            header h1 {
+                font-size: 26px;
+
+                letter-spacing: 3px;
+            }
+
+            .hexagram-name {
+                font-size: 32px;
+            }
+
+            .hexagram-header {
+                padding:
+                    25px
+                    18px;
+            }
+
+            .gua-ci,
+            .yao-card,
+            .special-card {
+                padding: 20px;
+            }
+
+            .chinese {
+                font-size: 17px;
+            }
+
+            .navigation {
+                flex-direction: column;
+            }
+
+            .nav-button {
+                width: 100%;
+
+                text-align: center;
+            }
+
+            .hexagram-lines {
+                width: 230px;
+            }
+
+            .yang-line,
+            .yin-line {
+                width: 190px;
+            }
+
+            .yin-line::before,
+            .yin-line::after {
+                width: 82px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>
+        《易经》法汉双语古籍语料库
+    </h1>
+
+    <p>
+        Yijing — Corpus bilingue chinois-français
+    </p>
+
+</header>
+
+
+<div class="back-area">
+
+    <a
+        href="/"
+        class="back-link"
+    >
+        ← 返回六十四卦
+    </a>
+
+</div>
+
+
+<main>
+
+
+{% if results %}
+
+
+<!-- =========================
+     卦标题
+========================= -->
+
+<section class="hexagram-header">
+
+    <div class="hexagram-number">
+        第 {{ number }} 卦
+    </div>
+
+    <h2 class="hexagram-name">
+        {{ results[0]["hexagram"] }}
+    </h2>
+
+    <div class="hexagram-subtitle">
+        Yijing · Hexagram {{ number }}
+    </div>
+
+
+    <!-- =========================
+         卦象
+    ========================= -->
+
+    {% set gua = {
+        1:  ["阳","阳","阳","阳","阳","阳"],
+        2:  ["阴","阴","阴","阴","阴","阴"],
+        3:  ["阳","阴","阴","阴","阳","阴"],
+        4:  ["阴","阳","阴","阴","阴","阳"],
+        5:  ["阳","阳","阳","阴","阳","阳"],
+        6:  ["阳","阳","阴","阳","阳","阳"],
+        7:  ["阴","阴","阴","阳","阴","阴"],
+        8:  ["阴","阳","阴","阴","阴","阴"],
+        9:  ["阳","阳","阳","阳","阴","阳"],
+        10: ["阳","阳","阴","阳","阳","阴"],
+        11: ["阴","阴","阴","阳","阳","阳"],
+        12: ["阳","阳","阳","阴","阴","阴"],
+        13: ["阳","阴","阳","阳","阳","阳"],
+        14: ["阳","阳","阳","阳","阴","阳"],
+        15: ["阴","阴","阴","阴","阳","阴"],
+        16: ["阴","阳","阴","阴","阴","阴"],
+        17: ["阳","阴","阴","阳","阳","阴"],
+        18: ["阴","阳","阳","阴","阴","阳"],
+        19: ["阴","阴","阳","陽","陰","陰"],
+        20: ["陰","陰","陽","陽","陰","陰"],
+        21: ["陽","陰","陰","陽","陰","陽"],
+        22: ["陰","陽","陽","陽","陰","陽"],
+        23: ["陰","陰","陰","陽","陰","陰"],
+        24: ["陰","陰","陽","陰","陰","陰"],
+        25: ["陽","陽","陰","陽","陰","陽"],
+        26: ["陽","陰","陽","陽","陽","陽"],
+        27: ["陽","陰","陰","陰","陰","陽"],
+        28: ["陰","陽","陽","陽","陽","陰"],
+        29: ["陰","陽","陰","陰","陽","陰"],
+        30: ["陽","陰","陽","陽","陰","陽"],
+        31: ["陰","陽","陽","陰","陰","陽"],
+        32: ["陰","陽","陰","陰","陽","陽"],
+        33: ["陽","陽","陰","陰","陰","陽"],
+        34: ["陰","陰","陽","陽","陽","陽"],
+        35: ["陽","陰","陰","陽","陽","陽"],
+        36: ["陰","陰","陽","陽","陰","陰"],
+        37: ["陽","陰","陽","陰","陰","陽"],
+        38: ["陰","陽","陰","陽","陰","陽"],
+        39: ["陰","陽","陰","陰","陰","陽"],
+        40: ["陰","陰","陽","陰","陽","陰"],
+        41: ["陰","陰","陽","陽","陰","陰"],
+        42: ["陽","陽","陰","陰","陽","陽"],
+        43: ["陽","陽","陽","陽","陽","陰"],
+        44: ["陽","陽","陽","陰","陽","陽"],
+        45: ["陰","陰","陰","陽","陽","陰"],
+        46: ["陰","陰","陽","陰","陰","陽"],
+        47: ["陰","陽","陰","陽","陽","陰"],
+        48: ["陰","陽","陰","陰","陽","陽"],
+        49: ["陰","陽","陽","陽","陰","陽"],
+        50: ["陽","陰","陽","陽","陽","陰"],
+        51: ["陽","陰","陰","陽","陰","陰"],
+        52: ["陰","陰","陽","陰","陰","陽"],
+        53: ["陰","陽","陽","陰","陽","陽"],
+        54: ["陽","陰","陰","陰","陽","陰"],
+        55: ["陽","陰","陽","陽","陽","陰"],
+        56: ["陽","陰","陽","陰","陽","陰"],
+        57: ["陰","陽","陽","陰","陽","陽"],
+        58: ["陽","陽","陰","陽","陽","陰"],
+        59: ["陽","陰","陰","陰","陽","陰"],
+        60: ["陰","陽","陰","陽","陰","陰"],
+        61: ["陽","阳","阳","阴","阴","阳"],
+        62: ["阴","阴","阳","阳","阴","阴"],
+        63: ["阳","阴","阳","阴","阳","阴"],
+        64: ["阴","阳","阴","阳","阴","阳"]
+    }[number] %}
+
+
+    <div class="hexagram-visual">
+
+        <div class="hexagram-visual-title">
+            卦象
+        </div>
+
+
+        <div class="hexagram-lines">
+
+            {% for yao in gua|reverse %}
+
+            <div class="yao-line">
+
+                {% if yao in ["阳", "陽"] %}
+
+                    <div class="yang-line"></div>
+
+                {% else %}
+
+                    <div class="yin-line"></div>
+
+                {% endif %}
+
+                <div class="yao-label">
+
+                    {% if loop.index == 1 %}
+                        上爻
+                    {% elif loop.index == 2 %}
+                        五爻
+                    {% elif loop.index == 3 %}
+                        四爻
+                    {% elif loop.index == 4 %}
+                        三爻
+                    {% elif loop.index == 5 %}
+                        二爻
+                    {% else %}
+                        初爻
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <div class="hexagram-symbol">
+
+            {% if number == 1 %}
+                ☰ ☰
+            {% elif number == 2 %}
+                ☷ ☷
+            {% else %}
+                《易经》六十四卦 · 第 {{ number }} 卦
+            {% endif %}
+
+        </div>
+
+
+        <div class="hexagram-note">
+            阳爻为实线，阴爻为断线；卦象自下而上排列
+        </div>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================
+     卦辞
+========================= -->
+
+<h3 class="section-title">
+    卦辞
+</h3>
+
+
+<section class="gua-ci">
+
+    {% for row in results %}
+
+        {% if row["type"] == "卦辞" %}
+
+        <div class="entry">
+
+            <span class="language-label">
+                中文原文
+            </span>
+
+            <div class="chinese">
+                {{ row["chinese"] }}
+            </div>
+
+            <div class="french">
+
+                <span class="language-label">
+                    Traduction française
+                </span>
+
+                {{ row["french"] }}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    {% endfor %}
+
+</section>
+
+
+
+<!-- =========================
+     普通爻辞
+========================= -->
+
+<h3 class="section-title">
+    爻辞
+</h3>
+
+
+<section class="yao-list">
+
+    {% for row in results %}
+
+        {% if row["type"] == "爻辞" %}
+
+        <article class="yao-card">
+
+            <div>
+
+                <span class="yao-position">
+                    {{ row["position"] }}
+                </span>
+
+            </div>
+
+
+            <div class="chinese">
+
+                <span class="language-label">
+                    中文原文
+                </span>
+
+                {{ row["chinese"] }}
+
+            </div>
+
+
+            <div class="french">
+
+                <span class="language-label">
+                    Traduction française
+                </span>
+
+                {{ row["french"] }}
+
+            </div>
+
+        </article>
+
+        {% endif %}
+
+    {% endfor %}
+
+</section>
+
+
+
+<!-- =========================
+     特殊爻辞
+========================= -->
+
+{% set special_rows = results
+    | selectattr("type", "equalto", "特殊爻辞")
+    | list
+%}
+
+
+{% if special_rows %}
+
+<section class="special-section">
+
+    <h3 class="section-title">
+        特殊爻辞
+    </h3>
+
+
+    <div class="yao-list">
+
+        {% for row in special_rows %}
+
+        <article class="special-card">
+
+            <div>
+
+                <span class="special-label">
+                    {{ row["position"] }}
+                </span>
+
+            </div>
+
+
+            <div class="chinese">
+
+                <span class="language-label">
+                    中文原文
+                </span>
+
+                {{ row["chinese"] }}
+
+            </div>
+
+
+            <div class="french">
+
+                <span class="language-label">
+                    Traduction française
+                </span>
+
+                {{ row["french"] }}
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+
+<!-- =========================
+     上一卦 / 下一卦
+========================= -->
+
+<nav class="navigation">
+
+
+    {% if number > 1 %}
+
+    <a
+        href="/hexagram/{{ number - 1 }}"
+        class="nav-button"
+    >
+        ← 第 {{ number - 1 }} 卦
+    </a>
+
+    {% else %}
+
+    <span></span>
+
+    {% endif %}
+
+
+    <div class="nav-center">
+
+        第 {{ number }} / 64 卦
+
+    </div>
+
+
+    {% if number < 64 %}
+
+    <a
+        href="/hexagram/{{ number + 1 }}"
+        class="nav-button"
+    >
+        第 {{ number + 1 }} 卦 →
+    </a>
+
+    {% else %}
+
+    <span></span>
+
+    {% endif %}
+
+
+</nav>
+
+
+{% else %}
+
+
+<section class="gua-ci">
+
+    <div class="entry">
+
+        <div class="chinese">
+            未找到第 {{ number }} 卦的数据。
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endif %}
+
+
+</main>
+
+
+<footer>
+
+    《易经》法汉双语古籍语料库 · Nankai University
+
+</footer>
+
+
+</body>
+
+</html>
