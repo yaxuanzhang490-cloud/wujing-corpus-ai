@@ -1,4 +1,6 @@
-from flask import Flask, request, jsonify
+import os
+
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
 from qwen_service import ask_qwen
@@ -29,15 +31,10 @@ CORS(app)
 @app.route("/")
 def index():
 
-    return """
-    <h1>五经古典语料库 AI 服务</h1>
-
-    <p>AI 服务正在运行。</p>
-
-    <p>API 地址：</p>
-
-    <code>POST /api/ask</code>
-    """
+    return send_from_directory(
+        os.path.dirname(os.path.abspath(__file__)),
+        "index.html"
+    )
 
 
 # ============================================================
@@ -539,13 +536,15 @@ if __name__ == "__main__":
     print("正在启动服务器……")
     print()
 
+    port = int(os.environ.get("PORT", 5001))
+
     print("浏览器测试地址：")
-    print("http://127.0.0.1:5001")
+    print(f"http://127.0.0.1:{port}")
 
     print()
 
     print("AI API 地址：")
-    print("http://127.0.0.1:5001/api/ask")
+    print(f"http://127.0.0.1:{port}/api/ask")
 
     print()
 
@@ -553,9 +552,8 @@ if __name__ == "__main__":
 
     print("=" * 60)
 
-
     app.run(
-        host="127.0.0.1",
-        port=5001,
-        debug=True
+        host="0.0.0.0",
+        port=port,
+        debug=False
     )
