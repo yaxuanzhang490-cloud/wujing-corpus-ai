@@ -43,6 +43,19 @@ def load_corpus() -> List[Dict[str, Any]]:
             "normalized_corpus.json 顶层结构不是 list"
         )
 
+    # 加载自定义扩充语料
+    custom_file = BASE_DIR / "custom_corpus.json"
+    if custom_file.exists():
+        with open(custom_file, "r", encoding="utf-8") as f:
+            custom_data = json.load(f)
+
+        if not isinstance(custom_data, list):
+            raise ValueError(
+                "custom_corpus.json 顶层结构不是 list"
+            )
+
+        data.extend(custom_data)
+
     return data
 
 

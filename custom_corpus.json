@@ -1,0 +1,15 @@
+[
+  {
+    "corpus": "测试语料",
+    "book": "测试典籍",
+    "chapter": "测试篇",
+    "chinese": "天地玄黄，宇宙洪荒。",
+    "french": "Ceci est une donnée de test du corpus.",
+    "source": "测试数据",
+    "meta": {
+      "translator": "测试译者",
+      "edition": "测试译本",
+      "language": "fr"
+    }
+  }
+]

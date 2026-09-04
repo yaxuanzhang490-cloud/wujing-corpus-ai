@@ -195,6 +195,18 @@ def load_all():
     else:
         print("  [警告] 未找到 易经 语料：", SRC_YIJING)
 
+    # 4) 自定义扩充语料（JSON）
+    src_custom = os.path.join(HERE, 'custom_corpus.json')
+    if os.path.exists(src_custom):
+        with open(src_custom, 'r', encoding='utf-8') as f:
+            custom = json.load(f)
+        if not isinstance(custom, list):
+            raise ValueError("custom_corpus.json 必须是 JSON 数组，例如 []")
+        raw.extend(custom)
+        print(f"  自定义扩充语料 custom_corpus.json：{len(custom)} 条")
+    else:
+        print("  [提示] 未找到自定义扩充语料：", src_custom)
+
     return raw
 
 
@@ -732,6 +744,82 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     <p>本平台为五经专属中法对照双语语料库网站，整合《诗》《书》《礼》《易》《春秋》全套精校平行译语文本，深度对接“识典古籍”资料库，补齐古文原文考据、篇目异文参考，同时搭载前沿AI能力，打造典籍翻译科研专属工具。</p>
     <p>平台支持<span class="feat">中法双语精准句段检索</span>、<span class="feat">核心儒学术语AI深度释义</span>、<span class="feat">古籍文本异文勘核辅助</span>、<span class="feat">多版译法智能对比点评</span>四大核心功能。专为法语研习、典籍外译研究、汉学学术调研打造，兼顾原文严谨性与数字化使用效率，助力五经海外译介研究、古典文献翻译教学，搭建中华经典跨文化传播的数字化研究桥梁。</p>
   </div>
+
+  <!-- ============ 首页 AI 智能助手 ============ -->
+<div id="homeAiPanel" style="
+    margin: 30px auto;
+    max-width: 1100px;
+    padding: 25px;
+    background: #fffaf0;
+    border: 1px solid #d8c7a3;
+    border-radius: 16px;
+">
+
+    <h2 style="
+        margin-top: 0;
+        color: #8b2e1f;
+    ">
+        🤖 五经 AI 智能助手
+    </h2>
+
+    <p style="color:#666;">
+        可用于辅助理解《诗经》《尚书》《礼记》《春秋》《易经》等古籍。
+    </p>
+
+    <textarea
+        id="aiQuestion"
+        placeholder="例如：请简单介绍一下《易经》中的乾卦。"
+        style="
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #d8c7a3;
+            border-radius: 10px;
+            font-size: 16px;
+            resize: vertical;
+        "
+    ></textarea>
+
+    <button
+        id="aiAskBtn"
+        style="
+            margin-top: 12px;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            background: #a83221;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        "
+    >
+        发送给 AI
+    </button>
+
+    <div
+        id="aiStatus"
+        style="
+            margin-top: 15px;
+            color: #666;
+        "
+    ></div>
+
+    <div
+        id="aiAnswer"
+        style="
+            margin-top: 15px;
+            padding: 18px;
+            background: white;
+            border-radius: 10px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            display: none;
+        "
+    ></div>
+
+</div>
+
 </section>
 
 <!-- ============ AI 助手 ============ -->
@@ -821,97 +909,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         </main>
   </div>
 
-  <!-- ============================================================
-       AI 助手
-       ============================================================ -->
 
-  <section id="aiPanel" class="ai-panel">
 
-    <div class="ai-title">
-      🤖 五经 AI 助手
-    </div>
 
-    <div class="ai-description">
-      基于通义千问，为五经古典文献学习提供智能问答。
-    </div>
-
-    <div class="ai-input-row">
-
-      <textarea
-        id="aiQuestion"
-        class="ai-question"
-        placeholder="例如：请介绍一下《易经》中的乾卦……"
-        rows="3"
-      ></textarea>
-
-      <button
-        id="aiAskBtn"
-        class="ai-ask-btn"
-      >
-        询问 AI
-      </button>
-
-    </div>
-
-    <div
-      id="aiStatus"
-      class="ai-status"
-      style="display:none;"
-    ></div>
-
-    <div
-      id="aiAnswer"
-      class="ai-answer"
-      style="display:none;"
-    ></div>
-
-  </section>
-
-  <!-- ============================================================
-       AI 助手
-       ============================================================ -->
-
-  <section id="aiPanel" class="ai-panel">
-
-    <div class="ai-title">
-      🤖 五经 AI 助手
-    </div>
-
-    <div class="ai-description">
-      基于通义千问，为五经古典文献学习提供智能问答。
-    </div>
-
-    <div class="ai-input-row">
-
-      <textarea
-        id="aiQuestion"
-        class="ai-question"
-        placeholder="例如：请介绍一下《易经》中的乾卦……"
-        rows="3"
-      ></textarea>
-
-      <button
-        id="aiAskBtn"
-        class="ai-ask-btn"
-      >
-        询问 AI
-      </button>
-
-    </div>
-
-    <div
-      id="aiStatus"
-      class="ai-status"
-      style="display:none;"
-    ></div>
-
-    <div
-      id="aiAnswer"
-      class="ai-answer"
-      style="display:none;"
-    ></div>
-
-  </section>
 
 
   <footer class="app">
@@ -1359,7 +1359,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     try {
 
       var response = await fetch(
-        "http://127.0.0.1:5001/api/ask",
+        "/api/ask",
         {
           method: "POST",
 
@@ -1414,6 +1414,71 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       sendBtn.textContent = "发送";
     }
   }
+
+  async function askHomeAI() {
+  var input = document.getElementById("aiQuestion");
+  var sendBtn = document.getElementById("aiAskBtn");
+  var status = document.getElementById("aiStatus");
+  var answer = document.getElementById("aiAnswer");
+
+  var question = input.value.trim();
+
+  if (!question) {
+    status.style.display = "block";
+    status.textContent = "请输入你的问题。";
+    return;
+  }
+
+  sendBtn.disabled = true;
+  sendBtn.textContent = "思考中…";
+
+  status.style.display = "block";
+  status.textContent = "正在连接 AI 服务……";
+
+  answer.style.display = "block";
+  answer.textContent = "";
+
+  try {
+    var response = await fetch(
+      "/api/ask",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          question: question
+        })
+      }
+    );
+
+    var data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "AI 服务请求失败");
+    }
+
+    answer.textContent =
+      data.answer ||
+      data.response ||
+      data.message ||
+      "AI 没有返回有效回答。";
+
+    status.textContent = "回答完成";
+
+  } catch (error) {
+    console.error(error);
+
+    status.textContent = "AI 服务连接失败";
+
+    answer.textContent =
+      "抱歉，AI 暂时无法回答。\n\n" +
+      "请稍后再试。";
+  } finally {
+    sendBtn.disabled = false;
+    sendBtn.textContent = "发送给 AI";
+  }
+}
 
 
   function bindAI() {
@@ -1491,6 +1556,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     buildBoxes();
     bind();
     bindAI();
+    document.getElementById("aiAskBtn").addEventListener("click", askHomeAI);
     document.getElementById('portalSearch').addEventListener('submit', function(e){
       e.preventDefault();
       var v = document.getElementById('portalQ').value.trim();

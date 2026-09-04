@@ -1,10 +1,16 @@
 import os
 
+from dotenv import load_dotenv
+
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
 from qwen_service import ask_qwen
 from rag_service import search_corpus
+
+# 加载项目根目录下的 .env
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 
 # ============================================================
