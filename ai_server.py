@@ -1,4 +1,8 @@
 import os
+import json
+import csv
+import io
+import openpyxl
 
 from dotenv import load_dotenv
 
@@ -529,9 +533,604 @@ def api_ask():
         }), 500
 
 
+
+# ============================================================
+# 语料库扩充接口
+# ============================================================
+
+@app.route("/api/corpus/auth", methods=["POST"])
+def corpus_auth():
+
+    admin_token = os.environ.get("CORPUS_ADMIN_TOKEN", "")
+    request_token = request.headers.get("X-Corpus-Token", "")
+
+    if not admin_token:
+        return jsonify({
+            "success": False,
+            "error": "服务器未配置语料库管理员 Token"
+        }), 500
+
+    if request_token != admin_token:
+        return jsonify({
+            "success": False,
+            "error": "管理员 Token 无效"
+        }), 403
+
+    return jsonify({
+        "success": True,
+        "message": "管理员验证成功"
+    })
+
+
+@app.route("/api/corpus/add", methods=["POST"])
+def add_corpus():
+
+    try:
+
+        # ====================================================
+        # 第一步：验证管理员 Token
+        # ====================================================
+
+        admin_token = os.environ.get(
+            "CORPUS_ADMIN_TOKEN",
+            ""
+        )
+
+        request_token = request.headers.get(
+            "X-Corpus-Token",
+            ""
+        )
+
+        if not admin_token:
+            return jsonify({
+                "success": False,
+                "error": "服务器未配置语料库管理员 Token"
+            }), 500
+
+        if request_token != admin_token:
+            return jsonify({
+                "success": False,
+                "error": "管理员 Token 无效"
+            }), 403
+
+
+        # ====================================================
+        # 第二步：获取请求数据
+        # ====================================================
+
+        data = request.get_json()
+
+        if not data:
+            return jsonify({
+                "success": False,
+                "error": "没有收到语料数据"
+            }), 400
+
+
+        # ====================================================
+        # 第三步：检查必填字段
+        # ====================================================
+
+        required_fields = [
+            "book",
+            "chapter",
+            "chinese",
+            "french"
+        ]
+
+        for field in required_fields:
+
+            value = str(
+                data.get(field, "") or ""
+            ).strip()
+
+            if not value:
+                return jsonify({
+                    "success": False,
+                    "error": f"字段不能为空：{field}"
+                }), 400
+
+
+        # ====================================================
+        # 第四步：读取 custom_corpus.json
+        # ====================================================
+
+        custom_file = os.path.join(BASE_DIR, "custom_corpus.json")
+
+        if os.path.exists(custom_file):
+
+            with open(
+                custom_file,
+                "r",
+                encoding="utf-8"
+            ) as f:
+
+                corpus = json.load(f)
+
+        else:
+
+            corpus = []
+
+
+        if not isinstance(corpus, list):
+
+            return jsonify({
+                "success": False,
+                "error": "custom_corpus.json 格式错误"
+            }), 500
+
+
+        # ====================================================
+        # 第五步：整理新语料
+        # ====================================================
+
+        new_record = {
+
+            "corpus": data.get(
+                "corpus",
+                "自定义语料"
+            ),
+
+            "book": data.get(
+                "book",
+                ""
+            ).strip(),
+
+            "chapter": data.get(
+                "chapter",
+                ""
+            ).strip(),
+
+            "chinese": data.get(
+                "chinese",
+                ""
+            ).strip(),
+
+            "french": data.get(
+                "french",
+                ""
+            ).strip(),
+
+            "source": data.get(
+                "source",
+                "管理员添加"
+            ).strip(),
+
+            "meta": {
+
+                "translator": data.get(
+                    "translator",
+                    ""
+                ).strip(),
+
+                "edition": data.get(
+                    "edition",
+                    ""
+                ).strip(),
+
+                "language": data.get(
+                    "language",
+                    "fr"
+                ).strip()
+
+            }
+
+        }
+
+
+        # ====================================================
+        # 第六步：写入语料库
+        # ====================================================
+
+        corpus.append(new_record)
+
+        with open(
+            custom_file,
+            "w",
+            encoding="utf-8"
+        ) as f:
+
+            json.dump(
+                corpus,
+                f,
+                ensure_ascii=False,
+                indent=2
+            )
+
+
+        print()
+        print("=" * 70)
+        print("✓ 新语料添加成功")
+        print(f"  典籍：{new_record['book']}")
+        print(f"  篇章：{new_record['chapter']}")
+        print("=" * 70)
+
+
+        return jsonify({
+
+            "success": True,
+
+            "message": "语料添加成功",
+
+            "record": new_record,
+
+            "total": len(corpus)
+
+        })
+
+
+    except Exception as e:
+
+        print()
+        print("❌ 语料添加失败：")
+        print(e)
+
+        return jsonify({
+
+            "success": False,
+
+            "error": str(e)
+
+        }), 500
+
+
 # ============================================================
 # 启动服务器
 # ============================================================
+
+@app.route("/api/corpus/import", methods=["POST"])
+def import_corpus():
+
+    try:
+
+        # ====================================================
+        # 第一步：验证管理员 Token
+        # ====================================================
+
+        admin_token = os.environ.get(
+            "CORPUS_ADMIN_TOKEN",
+            ""
+        )
+
+        request_token = request.headers.get(
+            "X-Corpus-Token",
+            ""
+        )
+
+        if not admin_token:
+            return jsonify({
+                "success": False,
+                "error": "服务器未配置语料库管理员 Token"
+            }), 500
+
+        if request_token != admin_token:
+            return jsonify({
+                "success": False,
+                "error": "管理员 Token 无效"
+            }), 403
+
+        # ====================================================
+        # 第二步：获取上传文件
+        # ====================================================
+
+        uploaded_file = request.files.get("file")
+
+        if not uploaded_file:
+            return jsonify({
+                "success": False,
+                "error": "没有收到上传文件"
+            }), 400
+
+        filename = uploaded_file.filename or ""
+        extension = os.path.splitext(filename)[1].lower()
+
+        if extension not in [".xlsx", ".xls", ".csv", ".json"]:
+            return jsonify({
+                "success": False,
+                "error": "只支持 Excel、CSV、JSON 文件"
+            }), 400
+
+        # ====================================================
+        # 第三步：读取文件
+        # ====================================================
+
+        records = []
+
+        if extension in [".xlsx", ".xls"]:
+
+            workbook = openpyxl.load_workbook(
+                uploaded_file,
+                read_only=True,
+                data_only=True
+            )
+
+            sheet = workbook.active
+            rows = list(sheet.iter_rows(values_only=True))
+
+            if not rows:
+                return jsonify({
+                    "success": False,
+                    "error": "Excel 文件为空"
+                }), 400
+
+            headers = [
+                str(value).strip() if value is not None else ""
+                for value in rows[0]
+            ]
+
+            for row in rows[1:]:
+
+                record = {}
+
+                for index, value in enumerate(row):
+
+                    if index < len(headers) and headers[index]:
+                        record[headers[index]] = (
+                            str(value).strip()
+                            if value is not None
+                            else ""
+                        )
+
+                if any(record.values()):
+                    records.append(record)
+
+            workbook.close()
+
+        elif extension == ".csv":
+
+            content = uploaded_file.read().decode(
+                "utf-8-sig"
+            )
+
+            reader = csv.DictReader(
+                io.StringIO(content)
+            )
+
+            for row in reader:
+
+                record = {}
+
+                for key, value in row.items():
+
+                    key = (
+                        str(key).strip()
+                        if key is not None
+                        else ""
+                    )
+
+                    value = (
+                        str(value).strip()
+                        if value is not None
+                        else ""
+                    )
+
+                    if key:
+                        record[key] = value
+
+                if any(record.values()):
+                    records.append(record)
+
+        elif extension == ".json":
+
+            content = uploaded_file.read().decode(
+                "utf-8-sig"
+            )
+
+            data = json.loads(content)
+
+            if isinstance(data, list):
+
+                records = data
+
+            elif isinstance(data, dict):
+
+                if isinstance(data.get("records"), list):
+                    records = data["records"]
+
+                elif isinstance(data.get("data"), list):
+                    records = data["data"]
+
+                else:
+                    records = [data]
+
+            else:
+
+                return jsonify({
+                    "success": False,
+                    "error": "JSON 文件格式不正确"
+                }), 400
+
+        # ====================================================
+        # 第四步：检查数据
+        # ====================================================
+
+        required_fields = [
+            "book",
+            "chapter",
+            "chinese",
+            "french"
+        ]
+
+        valid_records = []
+        skipped_records = []
+
+        for index, data in enumerate(records, 1):
+
+            if not isinstance(data, dict):
+                skipped_records.append({
+                    "row": index,
+                    "reason": "不是有效的数据对象"
+                })
+                continue
+
+            missing_fields = []
+
+            for field in required_fields:
+
+                value = str(
+                    data.get(field, "") or ""
+                ).strip()
+
+                if not value:
+                    missing_fields.append(field)
+
+            if missing_fields:
+
+                skipped_records.append({
+                    "row": index,
+                    "reason": (
+                        "缺少字段："
+                        + "、".join(missing_fields)
+                    )
+                })
+
+                continue
+
+            new_record = {
+                "corpus": str(
+                    data.get(
+                        "corpus",
+                        "自定义语料"
+                    ) or "自定义语料"
+                ).strip(),
+
+                "book": str(
+                    data.get("book", "") or ""
+                ).strip(),
+
+                "chapter": str(
+                    data.get("chapter", "") or ""
+                ).strip(),
+
+                "chinese": str(
+                    data.get("chinese", "") or ""
+                ).strip(),
+
+                "french": str(
+                    data.get("french", "") or ""
+                ).strip(),
+
+                "source": str(
+                    data.get(
+                        "source",
+                        "批量导入"
+                    ) or "批量导入"
+                ).strip(),
+
+                "meta": {
+                    "translator": str(
+                        data.get(
+                            "translator",
+                            ""
+                        ) or ""
+                    ).strip(),
+
+                    "edition": str(
+                        data.get(
+                            "edition",
+                            ""
+                        ) or ""
+                    ).strip(),
+
+                    "language": str(
+                        data.get(
+                            "language",
+                            "fr"
+                        ) or "fr"
+                    ).strip()
+                }
+            }
+
+            valid_records.append(new_record)
+
+        if not valid_records:
+
+            return jsonify({
+                "success": False,
+                "error": "没有找到有效语料",
+                "total_rows": len(records),
+                "skipped": skipped_records
+            }), 400
+
+        # ====================================================
+        # 第五步：读取现有自定义语料
+        # ====================================================
+
+        custom_file = os.path.join(
+            BASE_DIR,
+            "custom_corpus.json"
+        )
+
+        if os.path.exists(custom_file):
+
+            with open(
+                custom_file,
+                "r",
+                encoding="utf-8"
+            ) as f:
+
+                corpus = json.load(f)
+
+        else:
+
+            corpus = []
+
+        if not isinstance(corpus, list):
+
+            return jsonify({
+                "success": False,
+                "error": "custom_corpus.json 格式错误"
+            }), 500
+
+        # ====================================================
+        # 第六步：批量写入
+        # ====================================================
+
+        corpus.extend(valid_records)
+
+        with open(
+            custom_file,
+            "w",
+            encoding="utf-8"
+        ) as f:
+
+            json.dump(
+                corpus,
+                f,
+                ensure_ascii=False,
+                indent=2
+            )
+
+        print()
+        print("=" * 70)
+        print("✓ 批量语料导入成功")
+        print(f"  文件：{filename}")
+        print(f"  成功：{len(valid_records)} 条")
+        print(f"  跳过：{len(skipped_records)} 条")
+        print(f"  自定义语料总数：{len(corpus)} 条")
+        print("=" * 70)
+
+        return jsonify({
+            "success": True,
+            "message": "批量语料导入成功",
+            "filename": filename,
+            "imported": len(valid_records),
+            "skipped": len(skipped_records),
+            "skipped_records": skipped_records,
+            "total": len(corpus)
+        })
+
+    except Exception as error:
+
+        print()
+        print("✗ 批量语料导入失败：")
+        print(error)
+
+        return jsonify({
+            "success": False,
+            "error": str(error)
+        }), 500
+
 
 if __name__ == "__main__":
 

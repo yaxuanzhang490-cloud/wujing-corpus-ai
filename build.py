@@ -1572,6 +1572,323 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   init();
 })();
 </script>
+<!-- ============ 语料库管理员入口 ============ -->
+<div id="corpusAdminEntry" style="
+  max-width: 1100px;
+  margin: 30px auto 20px;
+  text-align: right;
+">
+  <button
+    id="corpusAdminBtn"
+    type="button"
+    style="
+      padding: 8px 16px;
+      border: 1px solid #c8b58a;
+      border-radius: 8px;
+      background: #fffaf0;
+      color: #6b5632;
+      cursor: pointer;
+    "
+  >
+    ⚙️ 语料库管理
+  </button>
+</div>
+
+<script>
+(function () {
+  var adminBtn = document.getElementById("corpusAdminBtn");
+
+  if (!adminBtn) {
+    return;
+  }
+
+  adminBtn.addEventListener("click", async function () {
+
+    var token = window.prompt("请输入语料库管理员 Token：");
+
+    if (token === null) {
+      return;
+    }
+
+    token = token.trim();
+
+    if (!token) {
+      window.alert("Token 不能为空。");
+      return;
+    }
+
+    adminBtn.disabled = true;
+    adminBtn.textContent = "验证中……";
+
+    try {
+
+      var response = await fetch("/api/corpus/auth", {
+        method: "POST",
+        headers: {
+          "X-Corpus-Token": token
+        }
+      });
+
+      var result = await response.json();
+
+      if (response.ok && result.success) {
+        adminBtn.textContent = "管理员验证成功 ✓";
+
+        var panel = document.getElementById("corpusAdminPanel");
+
+        if (!panel) {
+          panel = document.createElement("div");
+          panel.id = "corpusAdminPanel";
+
+          panel.style.cssText =
+            "max-width:1100px;" +
+            "margin:20px auto;" +
+            "padding:24px;" +
+            "background:#fffaf0;" +
+            "border:1px solid #d8c7a3;" +
+            "border-radius:16px;" +
+            "box-sizing:border-box;";
+
+          panel.innerHTML = `
+            <h2 style="margin:0 0 18px;color:#6b5632;">
+              ⚙️ 五经语料库管理
+            </h2>
+
+            <p style="color:#766b5a;margin-bottom:20px;">
+              管理员验证成功。你可以在这里新增一条中文—法文语料。
+            </p>
+
+            <div style="display:grid;gap:14px;">
+
+              <label>
+                经书：
+                <input
+                  id="adminBook"
+                  type="text"
+                  placeholder="例如：诗经"
+                  style="width:100%;box-sizing:border-box;padding:10px;margin-top:5px;"
+                >
+              </label>
+
+              <label>
+                篇章：
+                <input
+                  id="adminChapter"
+                  type="text"
+                  placeholder="例如：关雎"
+                  style="width:100%;box-sizing:border-box;padding:10px;margin-top:5px;"
+                >
+              </label>
+
+              <label>
+                中文原文：
+                <textarea
+                  id="adminChinese"
+                  rows="4"
+                  placeholder="请输入中文原文"
+                  style="width:100%;box-sizing:border-box;padding:10px;margin-top:5px;"
+                ></textarea>
+              </label>
+
+              <label>
+                法文翻译：
+                <textarea
+                  id="adminFrench"
+                  rows="4"
+                  placeholder="请输入法文翻译"
+                  style="width:100%;box-sizing:border-box;padding:10px;margin-top:5px;"
+                ></textarea>
+              </label>
+
+              <button
+                id="adminAddBtn"
+                type="button"
+                style="padding:11px 18px;border:0;border-radius:8px;background:#8b6f47;color:white;cursor:pointer;"
+              >
+                添加到语料库
+              </button>
+
+              <div
+                id="adminStatus"
+                style="min-height:24px;color:#6b5632;"
+              ></div>
+
+              <hr style="border:0;border-top:1px solid #d8c7a3;margin:10px 0;">
+
+              <div>
+                <h3 style="margin:0 0 10px;color:#6b5632;">
+                  📥 批量导入语料
+                </h3>
+
+                <p style="margin:0 0 12px;color:#766b5a;">
+                  支持 Excel（.xlsx / .xls）、CSV、JSON。
+                  文件中的字段需要包含：book、chapter、chinese、french。
+                </p>
+
+                <input
+                  id="adminImportFile"
+                  type="file"
+                  accept=".xlsx,.xls,.csv,.json"
+                  style="display:block;width:100%;box-sizing:border-box;padding:10px;margin-bottom:12px;border:1px solid #d8c7a3;border-radius:8px;background:white;"
+                >
+
+                <button
+                  id="adminImportBtn"
+                  type="button"
+                  style="padding:11px 18px;border:0;border-radius:8px;background:#6b5632;color:white;cursor:pointer;"
+                >
+                  📥 批量导入
+                </button>
+
+                <div
+                  id="adminImportStatus"
+                  style="min-height:24px;margin-top:12px;color:#6b5632;"
+                ></div>
+              </div>
+
+            </div>
+          `;
+
+          document.getElementById("corpusAdminEntry").after(panel);
+
+          document.getElementById("adminAddBtn").addEventListener("click", async function () {
+
+            var book = document.getElementById("adminBook").value.trim();
+            var chapter = document.getElementById("adminChapter").value.trim();
+            var chinese = document.getElementById("adminChinese").value.trim();
+            var french = document.getElementById("adminFrench").value.trim();
+            var status = document.getElementById("adminStatus");
+
+            if (!book || !chapter || !chinese || !french) {
+              status.textContent = "请完整填写经书、篇章、中文原文和法文翻译。";
+              return;
+            }
+
+            status.textContent = "正在添加……";
+
+            try {
+
+              var addResponse = await fetch("/api/corpus/add", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-Corpus-Token": token
+                },
+                body: JSON.stringify({
+                  book: book,
+                  chapter: chapter,
+                  chinese: chinese,
+                  french: french
+                })
+              });
+
+              var addResult = await addResponse.json();
+
+              if (addResponse.ok && addResult.success) {
+
+                status.textContent =
+                  "✅ 添加成功！当前自定义语料共 " +
+                  addResult.total +
+                  " 条。";
+
+                document.getElementById("adminBook").value = "";
+                document.getElementById("adminChapter").value = "";
+                document.getElementById("adminChinese").value = "";
+                document.getElementById("adminFrench").value = "";
+
+              } else {
+
+                status.textContent =
+                  "❌ 添加失败：" +
+                  (addResult.error || "未知错误");
+
+              }
+
+            } catch (error) {
+
+              console.error(error);
+              status.textContent = "❌ 无法连接语料库接口。";
+
+            }
+
+          });
+        }
+
+        document.getElementById("adminImportBtn").addEventListener("click", async function () {
+          var fileInput = document.getElementById("adminImportFile");
+          var status = document.getElementById("adminImportStatus");
+          var importBtn = document.getElementById("adminImportBtn");
+
+          if (!fileInput.files || fileInput.files.length === 0) {
+            status.textContent = "请先选择一个 Excel、CSV 或 JSON 文件。";
+            return;
+          }
+
+          var file = fileInput.files[0];
+
+          status.textContent = "正在导入，请稍候……";
+          importBtn.disabled = true;
+          importBtn.textContent = "导入中……";
+
+          try {
+            var formData = new FormData();
+            formData.append("file", file);
+
+            var importResponse = await fetch("/api/corpus/import", {
+              method: "POST",
+              headers: {
+                "X-Corpus-Token": token
+              },
+              body: formData
+            });
+
+            var importResult = await importResponse.json();
+
+            if (importResponse.ok && importResult.success) {
+              status.textContent =
+                "✅ 批量导入成功！本次导入 " +
+                importResult.imported +
+                " 条，跳过 " +
+                importResult.skipped +
+                " 条；当前自定义语料共 " +
+                importResult.total +
+                " 条。";
+
+              fileInput.value = "";
+            } else {
+              status.textContent =
+                "❌ 批量导入失败：" +
+                (importResult.error || "未知错误");
+            }
+          } catch (error) {
+            console.error(error);
+            status.textContent = "❌ 无法连接批量导入接口。";
+          }
+
+          importBtn.disabled = false;
+          importBtn.textContent = "📥 批量导入";
+        });
+
+        panel.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+
+      } else {
+        window.alert(result.error || "管理员验证失败。");
+      }
+
+    } catch (error) {
+      console.error(error);
+      window.alert("无法连接管理员验证接口。");
+    }
+
+    adminBtn.disabled = false;
+    adminBtn.textContent = "⚙️ 语料库管理";
+  });
+})();
+</script>
+
 </body>
 </html>
 """
